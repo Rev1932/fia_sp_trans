@@ -18,7 +18,7 @@ def auth() -> requests.Session:
     """
     Autentica na API da SPTrans 
     """
-    auth_url = f'{API_URL}/Login/Autenticacao?token={API_TOKEN}'
+    auth_url = f'{API_URL}/Login/Autenticar?token={API_TOKEN}'
     session = requests.Session()
     
     try:
