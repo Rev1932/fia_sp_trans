@@ -1,4 +1,3 @@
-# bronze.py
 from pyspark.sql.functions import col, udf, current_timestamp
 from pyspark.sql.types import StringType
 from confluent_kafka.schema_registry import SchemaRegistryClient
@@ -10,7 +9,6 @@ from .s3_utils import get_spark_session
 def read_from_kafka(spark, topic_name):
     """
     Lê um batch de dados de um tópico Kafka, decodificando mensagens Avro
-    manualmente (sem from_avro).
     """
     print(f"Lendo do tópico Kafka: {topic_name}")
 
