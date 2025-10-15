@@ -52,7 +52,7 @@ def run_bronze_layer():
     Executa o processo da camada Bronze: lê do Kafka e salva no MinIO.
     """
     spark = get_spark_session()
-    df_raw = read_from_kafka(spark, config.TOPIC_NAME)
+    df_raw = read_from_kafka(spark, 'Teste_sabino')
 
     if df_raw.count() > 0:
         df_final = df_raw.withColumn("ingestion_timestamp_utc", current_timestamp())
