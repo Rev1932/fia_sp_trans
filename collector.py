@@ -8,7 +8,6 @@ load_dotenv()
     #token de auth e url da API
 API_TOKEN = os.getenv('SPTRANS_API_TOKEN')
 API_BASE_URL = os.getenv('OLHO_VIVO_URL')
-API_GET_URL =  os.getenv('TO_ADD') #TODO adicionar o parametro especifico para ser utilizado
 
 
 #TODO: salvar os dados da API diretamente dentro de um dataframe, ao inves de dicionario
@@ -24,7 +23,7 @@ class ApiConection():
         """
         Autentica na API da SPTrans 
         """
-        auth_url = f'{self.api_token}/Login/Autenticar?token={self.api_base_url}'
+        auth_url = f'{self.api_base_url}/Login/Autenticar?token={self.api_token}'
         session = requests.Session()
         
         try:
@@ -53,7 +52,6 @@ class ApiConection():
             response = session.get(posicao_url)
             response.raise_for_status()
             dados = response.json()
-            print(f"Encontrados {len(dados.get('l', []))} linhas em operação.")
             return dados
         except requests.exceptions.RequestException as e:
             print(f"Erro ao buscar posição dos veículos: {e}")
@@ -63,7 +61,7 @@ class ApiConection():
         return None
 
     #TODO fazer a alteração para salvar o conteudo no Kafka
-    def save_data(dados:dict, path: str): 
+    def save_data(self, dados:dict, path: str): 
         """
         Salva os dados retornados pela API em um arquivo JSON.
         O nome do arquivo inclui a data e hora da coleta.
@@ -78,7 +76,7 @@ class ApiConection():
             
         # Gera um nome de arquivo único com timestamp
         timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-        nome_arquivo = f'posicao_veiculos_{timestamp}.json'
+        nome_arquivo = f'metodo_{self.api_get_url}_{timestamp}.json'
         caminho_arquivo = os.path.join(path, nome_arquivo)
         
         try:
