@@ -4,12 +4,6 @@ import json
 from datetime import datetime
 from dotenv import load_dotenv
 
-load_dotenv()
-    #token de auth e url da API
-API_TOKEN = os.getenv('SPTRANS_API_TOKEN')
-API_BASE_URL = os.getenv('OLHO_VIVO_URL')
-
-
 #TODO: salvar os dados da API diretamente dentro de um dataframe, ao inves de dicionario
 class ApiConection():
     def __init__(self, api_token, api_base_url, api_get_url):
@@ -77,7 +71,7 @@ class ApiConection():
         # Gera um nome de arquivo único com timestamp
         timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
         nome_arquivo = f'metodo_{self.api_get_url}_{timestamp}.json'
-        caminho_arquivo = os.path.join(path, nome_arquivo)
+        caminho_arquivo = os.path.join(path, 'teste')
         
         try:
             with open(caminho_arquivo, 'w', encoding='utf-8') as f:
