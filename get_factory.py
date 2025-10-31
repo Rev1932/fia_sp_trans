@@ -12,7 +12,7 @@ class GetDistribution():
             "paradas_buscar_linha": GetParadasBuscarLinha,
             "paradas_buscar_corredor": GetParadasBuscarCorredor,
             "corredor": GetCorredor,
-            "empresas": GetEmpresas,
+            "empresa": GetEmpresas,
             "previsao": GetPrevisao,
             "previsao_linha": GetPrevisaoLinha,
             "previsao_parada": GetPrevisaoParada,

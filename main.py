@@ -15,6 +15,11 @@ base_url = os.getenv('OLHO_VIVO_URL')
 def get_parse (): 
     parser = argparse.ArgumentParser(description='Extrai o GET a ser executado')
     parser.add_argument('--get', type=str, required=True, help='Metodo que será utilizada no GET da API')
+    parser.add_argument('--linha', type=str, required=False, help='Parametro de GETs da API')
+    parser.add_argument('--empresa', type=str, required=False, help='Parametro de GETs da API')
+    parser.add_argument('--sentido', type=str, required=False, help='Parametro de GETs da API')
+    parser.add_argument('--parada', type=str, required=False, help='Parametro de GETs da API')
+    parser.add_argument('--corredor', type=str, required=False, help='Parametro de GETs da API')
     return parser.parse_args()
 
 def main():

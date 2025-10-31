@@ -71,7 +71,7 @@ class ApiConection():
         # Gera um nome de arquivo único com timestamp
         timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
         nome_arquivo = f'metodo_{self.api_get_url}_{timestamp}.json'
-        caminho_arquivo = os.path.join(path, 'teste')
+        caminho_arquivo = os.path.join(path, f"{self.api_get_url}")
         
         try:
             with open(caminho_arquivo, 'w', encoding='utf-8') as f:
