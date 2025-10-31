@@ -1,4 +1,5 @@
 from collector import ApiConection
+from get_factory import GetDistribution
 import os
 import sys
 import argparse
@@ -8,8 +9,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
     #token de auth e url da API
-API_TOKEN = os.getenv('SPTRANS_API_TOKEN')
-API_BASE_URL = os.getenv('OLHO_VIVO_URL')
+api_token = os.getenv('SPTRANS_API_TOKEN')
+base_url = os.getenv('OLHO_VIVO_URL')
 
 def get_parse (): 
     parser = argparse.ArgumentParser(description='Extrai o GET a ser executado')
@@ -18,10 +19,8 @@ def get_parse ():
 
 def main():
     args = get_parse()
-    connect = ApiConection(API_TOKEN, API_BASE_URL, args)
-    session = connect.auth()
-    data = connect.get_data(session)
-    connect.save_data(data, 'dados')
+    get_instance = GetDistribution().new_instance(api_token, base_url, args)
+    get_instance.run()
 
 if __name__ == "__main__":
     main()

@@ -1,48 +1,52 @@
 #!/bin/bash
 
 # --- Configurações ---
-ARQUIVO_PARAMETROS="get_list.txt"
+ARQUIVO_DE_ENDPOINTS="endpoints.txt"
 SCRIPT_PYTHON="main.py"
+INTERVALO_CICLO_SEGUNDOS=300
+ESPERA_ENTRE_CHAMADAS_SEGUNDOS=5
 
-echo "Pressione [CTRL+C] para parar o script."
-while true; do
-    echo "================================================="
-    echo "Iniciando novo ciclo de coleta: $(date)"
-    echo "================================================="
+# --- Loop Infinito (Ciclo Externo) ---
+while true
+do
+    echo "----------------------------------------------------"
+    echo "INICIANDO NOVO CICLO COMPLETO DE COLETA"
+    echo "Data/Hora: $(date)"
+    echo "Lendo parâmetros de: $ARQUIVO_DE_ENDPOINTS"
+    echo "----------------------------------------------------"
 
-    # 3. Lê o arquivo de parâmetros linha por linha
-    while IFS='|' read -r termo_linha termo_parada || [[ -n "$termo_linha" ]]; do
-        
-        # Ignora linhas em branco ou que começam com #
-        if [[ -z "$termo_linha" ]] || [[ "$termo_linha" == \#* ]]; then
-            continue
+    # --- Loop Interno (Lê o arquivo linha por linha) ---
+    
+    # ***** INÍCIO DA MUDANÇA *****
+    # Usamos 'tr -d '\r'' para deletar o caractere Carriage Return (CR)
+    # antes que o 'while' leia a linha. Isso "limpa" a entrada.
+    tr -d '\r' < "$ARQUIVO_DE_ENDPOINTS" | while read -r parametro
+    # ***** FIM DA MUDANÇA *****
+    
+    do
+        # Ignora linhas em branco ou comentários (linhas que começam com #)
+        if [[ -n "$parametro" && ! "$parametro" =~ ^# ]]; then
+            echo ""
+            echo "[$(date +%T)] Executando coleta para: '$parametro'"
+            
+            # Agora '$parametro' estará limpo (ex: "posicao" e não "posicao\r")
+            python3 "$SCRIPT_PYTHON" --get "$parametro"
+            
+            echo "[$(date +%T)] Coleta de '$parametro' concluída."
+            
+            echo "Aguardando $ESPERA_ENTRE_CHAMADAS_SEGUNDOS segundos..."
+            sleep $ESPERA_ENTRE_CHAMADAS_SEGUNDOS
         fi
-        
-        # Monta o array de comando base
-        # Usar um array é mais seguro que 'eval' para argumentos com espaços
-        CMD_ARRAY=("python" "$SCRIPT_PYTHON" "--linha" "$termo_linha")
+    
+    # A linha 'done < "$ARQUIVO_DE_ENDPOINTS"' foi movida para cima,
+    # para dentro do pipe 'tr'.
+    done
 
-        # 4. Verifica se o parâmetro de parada existe
-        if [ -n "$termo_parada" ]; then
-            # Adiciona o argumento de parada ao comando
-            CMD_ARRAY+=("--parada" "$termo_parada")
-            echo "--- Coletando Linha: [$termo_linha] | Parada: [$termo_parada] ---"
-        else
-            echo "--- Coletando Linha: [$termo_linha] (somente posição) ---"
-        fi
-
-        # 5. Executa o comando Python
-        "${CMD_ARRAY[@]}"
-        
-        # 6. Pausa entre as requisições para não sobrecarregar a API
-        echo "Pausa de 5 segundos..."
-        sleep 5
-
-    done < "$ARQUIVO_PARAMETROS"
-
-    echo "================================================="
-    echo "Ciclo completo. Aguardando 60 segundos para recomeçar."
-    echo "================================================="
-    sleep 60
+    echo "----------------------------------------------------"
+    echo "CICLO COMPLETO CONCLUÍDO."
+    echo "Aguardando $INTERVALO_CICLO_SEGUNDOS segundos para recomeçar."
+    echo "----------------------------------------------------"
+    
+    sleep $INTERVALO_CICLO_SEGUNDOS
 
 done
