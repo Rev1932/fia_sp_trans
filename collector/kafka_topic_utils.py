@@ -3,7 +3,6 @@ from confluent_kafka import KafkaException
 from confluent_kafka.cimpl import KafkaError
 
 
-BROKER_ADDRESS = 'localhost:9092'
 class KafkaAdm():
     def __init__(self, broker_endpoint, topic_name):
         self.broker_endpoint = broker_endpoint
@@ -45,3 +44,8 @@ class KafkaAdm():
         except Exception as e:
             print(f"\n--- ERRO INESPERADO! ---")
             print(f"Erro: {e}")
+
+
+kafka = KafkaAdm('localhost:9092', 'teste')
+print("Criando topico teste")
+kafka.criar_topico()

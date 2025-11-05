@@ -73,3 +73,19 @@ class KafkaMessenger:
         """Close the Kafka Producer"""
         if self.producer:
             self.producer.close()
+
+mensagem = [{
+  "prefixo_veiculo": "2 1778",
+  "horario_ult_posicao_api": "2025-11-05T16:20:15Z",
+  "latitude": -23.55052,
+  "longitude": -46.633301,
+  "acessivel_deficiente": "true",
+  "letreiro_linha": "5111-10",
+  "codigo_linha": 345,
+  "horario_captura_api": "16:20",
+  "horario_processamento": "2025-11-05T16:21:33.450123"
+}]
+kafka_messenger = KafkaMessenger('localhost:9092', 'teste')
+kafka_messenger.send_message(mensagem)
+kafka_messenger.flush()
+kafka_messenger.close()
