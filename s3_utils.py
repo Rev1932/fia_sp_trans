@@ -1,19 +1,27 @@
 import duckdb
 from pyspark.sql import SparkSession
 from config import MINIO_ENDPOINT_URL, MINIO_USER, MINIO_PASSWORD
+import os
 
+# Se quiser garantir no Windows
+os.environ['HADOOP_HOME'] = 'C:/hadoop-3.0.0'
+os.environ['PATH'] += ';C:/hadoop-3.0.0/bin'
 
 def get_spark_session():
-    """Cria e configura uma sessão Spark para se conectar ao MinIO."""
     try:
+        print(MINIO_ENDPOINT_URL, MINIO_USER, MINIO_PASSWORD)
         builder = (
             SparkSession.builder.master("local[*]")
             .appName("MedallionPipeline")
-            .config("spark.jars.packages", "org.apache.spark:spark-avro_2.12:3.5.0")
+            .config("spark.jars.packages",
+                    "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1,"
+                    "org.apache.hadoop:hadoop-aws:3.3.4,"
+                    "com.amazonaws:aws-java-sdk-bundle:1.12.262")
             .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT_URL)
             .config("spark.hadoop.fs.s3a.access.key", MINIO_USER)
             .config("spark.hadoop.fs.s3a.secret.key", MINIO_PASSWORD)
             .config("spark.hadoop.fs.s3a.path.style.access", "true")
+            .config("spark.hadoop.hadoop.native.lib", "false")
             .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
         )
 
@@ -21,7 +29,8 @@ def get_spark_session():
         return spark
     except Exception as e:
         print(f'Erro ao iniciar secao spark: {e}')
-        return False
+        return None
+
 
 
 def get_duckdb_connection():
