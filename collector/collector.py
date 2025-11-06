@@ -2,6 +2,8 @@ import os
 import requests
 import json
 from datetime import datetime
+from kafka_messenger_utils import KafkaMessenger
+from kafka_topic_utils import KafkaAdm
 from dotenv import load_dotenv
 
 #TODO: salvar os dados da API diretamente dentro de um dataframe, ao inves de dicionario
@@ -54,8 +56,7 @@ class ApiConection():
             
         return None
 
-    #TODO fazer a alteração para salvar o conteudo no Kafka
-    def save_data(self, dados:dict, path: str): 
+    def save_data(self, dados:dict): 
         """
         Salva os dados retornados pela API em um arquivo JSON.
         O nome do arquivo inclui a data e hora da coleta.
@@ -64,18 +65,12 @@ class ApiConection():
             print("Nenhum dado para salvar.")
             return
 
-        # Garante que a pasta de destino exista
-        if not os.path.exists(path):
-            os.makedirs(path)
-            
-        # Gera um nome de arquivo único com timestamp
-        timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-        nome_arquivo = f'metodo_{self.api_get_url}_{timestamp}.json'
-        caminho_arquivo = os.path.join(path, f"{self.api_get_url}")
-        
-        try:
-            with open(caminho_arquivo, 'w', encoding='utf-8') as f:
-                json.dump(dados, f, ensure_ascii=False, indent=4)
-            print(f"Dados salvos com sucesso em: {caminho_arquivo}")
-        except IOError as e:
-            print(f"Erro ao salvar o arquivo: {e}")
+        kafka_topic = KafkaAdm('localhost:9092', self.api_get_url)
+        kafka_messenger = KafkaMessenger('localhost:9092', self.api_get_url)
+
+        print(f"Criando topico {self.api_get_url}")
+        kafka_topic.criar_topico()
+        print("Enviando dados para o Kafka")
+        kafka_messenger.send_message(dados)
+        kafka_messenger.flush()
+        kafka_messenger.close()
