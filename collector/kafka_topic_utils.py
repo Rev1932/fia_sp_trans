@@ -44,8 +44,3 @@ class KafkaAdm():
         except Exception as e:
             print(f"\n--- ERRO INESPERADO! ---")
             print(f"Erro: {e}")
-
-
-kafka = KafkaAdm('localhost:9092', 'teste')
-print("Criando topico teste")
-kafka.criar_topico()

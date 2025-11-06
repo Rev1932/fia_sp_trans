@@ -34,7 +34,7 @@ class GetPosicao() :
         connect = ApiConection(self.api_token, self.base_url, self.get)
         session = connect.auth()
         data = connect.get_data(session)
-        connect.save_data(data, 'dados')
+        connect.save_data(data)
 
 class GetPosicaoLinha() :
     def __init__(self, api_token, base_url, args):
