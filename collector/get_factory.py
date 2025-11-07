@@ -28,31 +28,37 @@ class GetPosicao() :
     def __init__(self, api_token, base_url, args):
         self.api_token = api_token
         self.base_url = base_url
+        self.topic_name = args.get
+        self.chave_conteudo = 'l'
         self.get = args.get
 
     def run(self):
         connect = ApiConection(self.api_token, self.base_url, self.get)
         session = connect.auth()
         data = connect.get_data(session)
-        connect.save_data(data)
+        print(data)
+        transformed_data = connect.transform_data(data, self.chave_conteudo)
+        connect.save_data(transformed_data, self.topic_name)
 
 class GetPosicaoLinha() :
     def __init__(self, api_token, base_url, args):
         self.api_token = api_token
         self.base_url = base_url
-        self.get = f"Posicao/Linha?codigoLinha={args.linha}"
+        self.topic_name = args.get
+        self.conteudo_json = 'vs'
+        self.get = f"posicao/linha?codigoLinha={args.linha}"
 
     def run(self):
         connect = ApiConection(self.api_token, self.base_url, self.get)
         session = connect.auth()
         data = connect.get_data(session)
-        connect.save_data(data)
+        connect.save_data(data, self.topic_name)
 
 class GetPosicaoGaragem() :
     def __init__(self, api_token, base_url, args):
         self.api_token = api_token
         self.base_url = base_url
-        self.get = f"{args.get}/Garagem?codigoEmpresa={args.empresa}"
+        self.get = f"{args.get}/garagem?codigoEmpresa={args.empresa}"
 
     def run(self):
         connect = ApiConection(self.api_token, self.base_url, self.get)
@@ -64,7 +70,7 @@ class GetLinhaBuscar() :
     def __init__(self, api_token, base_url, args):
         self.api_token = api_token
         self.base_url = base_url
-        self.get = f"{args.get}/Buscar?termosBusca={args.linha}" 
+        self.get = f"{args.get}/buscar?termosBusca={args.linha}" 
 
     def run(self):
         connect = ApiConection(self.api_token, self.base_url, self.get)
@@ -76,7 +82,7 @@ class GetLinhaBuscarSentido() :
     def __init__(self, api_token, base_url, args):
         self.api_token = api_token
         self.base_url = base_url
-        self.get = f"{args.get}/BuscarLinhaSentido?termosBusca={args.linha}&sentido={args.sentido}" 
+        self.get = f"{args.get}/buscarLinhaSentido?termosBusca={args.linha}&sentido={args.sentido}" 
 
     def run(self):
         connect = ApiConection(self.api_token, self.base_url, self.get)
@@ -88,7 +94,7 @@ class GetParadasBuscar() :
     def __init__(self, api_token, base_url, args):
         self.api_token = api_token
         self.base_url = base_url
-        self.get = f"{args.get}/Buscar?termosBusca={args.parada}" 
+        self.get = f"{args.get}/buscar?termosBusca={args.parada}" 
 
     def run(self):
         connect = ApiConection(self.api_token, self.base_url, self.get)
@@ -100,7 +106,7 @@ class GetParadasBuscarLinha() :
     def __init__(self, api_token, base_url, args):
         self.api_token = api_token
         self.base_url = base_url
-        self.get = f"{args.get}/BuscarParadasPorLinha?codigoLinha={args.linha}" 
+        self.get = f"{args.get}/buscarparadasoorlinha?codigoLinha={args.linha}" 
 
     def run(self):
         connect = ApiConection(self.api_token, self.base_url, self.get)

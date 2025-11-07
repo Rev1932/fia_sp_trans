@@ -1,10 +1,12 @@
 import os
 import requests
 import json
+import logging
 from datetime import datetime
 from kafka_messenger_utils import KafkaMessenger
 from kafka_topic_utils import KafkaAdm
 from dotenv import load_dotenv
+import pandas as pd
 
 #TODO: salvar os dados da API diretamente dentro de um dataframe, ao inves de dicionario
 class ApiConection():
@@ -43,7 +45,7 @@ class ApiConection():
             return None
         
         posicao_url = f'{self.api_base_url}/{self.api_get_url}'
-
+        print(posicao_url)
         try:
             response = session.get(posicao_url)
             response.raise_for_status()
@@ -56,7 +58,26 @@ class ApiConection():
             
         return None
 
-    def save_data(self, dados:dict): 
+    def transform_data(self, dados, chave_conteudo):
+        """
+        Função genérica para converter o JSON da API em um DataFrame Pandas,
+        usando pd.json_normalize para achatamento.
+        """
+        hora_api = None
+        hora_proc = datetime.now().isoformat()
+        df = pd.DataFrame() # DataFrame vazio por padrão
+
+        if isinstance(dados, dict):
+            hora_api = dados.get('hr')
+        df = pd.json_normalize(dados[f'{chave_conteudo}'])
+        print("Mostrando Data Frame \n")
+        print(df)
+        df['data_coleta'] = hora_proc
+        transformed_data = df.to_dict('records')
+        return transformed_data
+
+
+    def save_data(self, dados:dict, topic_name): 
         """
         Salva os dados retornados pela API em um arquivo JSON.
         O nome do arquivo inclui a data e hora da coleta.
@@ -65,10 +86,10 @@ class ApiConection():
             print("Nenhum dado para salvar.")
             return
 
-        kafka_topic = KafkaAdm('localhost:9092', self.api_get_url)
-        kafka_messenger = KafkaMessenger('localhost:9092', self.api_get_url)
+        kafka_topic = KafkaAdm('localhost:9092', topic_name)
+        kafka_messenger = KafkaMessenger('localhost:9092', topic_name)
 
-        print(f"Criando topico {self.api_get_url}")
+        print(f"Criando topico {topic_name}")
         kafka_topic.criar_topico()
         print("Enviando dados para o Kafka")
         kafka_messenger.send_message(dados)
