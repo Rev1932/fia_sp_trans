@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # --- Configurações ---
-ARQUIVO_DE_ENDPOINTS="endpoints.txt"
+ARQUIVO_DE_ENDPOINTS="linha_endpoints.txt"
 SCRIPT_PYTHON="main.py"
 INTERVALO_CICLO_SEGUNDOS=300
 ESPERA_ENTRE_CHAMADAS_SEGUNDOS=5
@@ -30,7 +30,7 @@ do
             echo "[$(date +%T)] Executando coleta para: '$parametro'"
             
             # Agora '$parametro' estará limpo (ex: "posicao" e não "posicao\r")
-            python3 "$SCRIPT_PYTHON" --get "$parametro"
+            python3 "$SCRIPT_PYTHON" --get posicao_linha --linha "$parametro"
             
             echo "[$(date +%T)] Coleta de '$parametro' concluída."
             

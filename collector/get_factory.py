@@ -40,13 +40,13 @@ class GetPosicaoLinha() :
     def __init__(self, api_token, base_url, args):
         self.api_token = api_token
         self.base_url = base_url
-        self.get = f"{args.get}/Linha?codigoLinha={args.linha}"
+        self.get = f"Posicao/Linha?codigoLinha={args.linha}"
 
     def run(self):
         connect = ApiConection(self.api_token, self.base_url, self.get)
         session = connect.auth()
         data = connect.get_data(session)
-        connect.save_data(data, 'dados')
+        connect.save_data(data)
 
 class GetPosicaoGaragem() :
     def __init__(self, api_token, base_url, args):
@@ -58,7 +58,7 @@ class GetPosicaoGaragem() :
         connect = ApiConection(self.api_token, self.base_url, self.get)
         session = connect.auth()
         data = connect.get_data(session)
-        connect.save_data(data, 'dados')
+        connect.save_data(data)
 
 class GetLinhaBuscar() :
     def __init__(self, api_token, base_url, args):
@@ -70,7 +70,7 @@ class GetLinhaBuscar() :
         connect = ApiConection(self.api_token, self.base_url, self.get)
         session = connect.auth()
         data = connect.get_data(session)
-        connect.save_data(data, 'dados')
+        connect.save_data(data)
 
 class GetLinhaBuscarSentido() :
     def __init__(self, api_token, base_url, args):
@@ -82,7 +82,7 @@ class GetLinhaBuscarSentido() :
         connect = ApiConection(self.api_token, self.base_url, self.get)
         session = connect.auth()
         data = connect.get_data(session)
-        connect.save_data(data, 'dados')
+        connect.save_data(data)
 
 class GetParadasBuscar() :
     def __init__(self, api_token, base_url, args):
@@ -94,7 +94,7 @@ class GetParadasBuscar() :
         connect = ApiConection(self.api_token, self.base_url, self.get)
         session = connect.auth()
         data = connect.get_data(session)
-        connect.save_data(data, 'dados')
+        connect.save_data(data)
 
 class GetParadasBuscarLinha() :
     def __init__(self, api_token, base_url, args):
@@ -106,7 +106,7 @@ class GetParadasBuscarLinha() :
         connect = ApiConection(self.api_token, self.base_url, self.get)
         session = connect.auth()
         data = connect.get_data(session)
-        connect.save_data(data, 'dados')
+        connect.save_data(data)
 
 class GetParadasBuscarCorredor() :
     def __init__(self, api_token, base_url, args):
@@ -118,7 +118,7 @@ class GetParadasBuscarCorredor() :
         connect = ApiConection(self.api_token, self.base_url, self.get)
         session = connect.auth()
         data = connect.get_data(session)
-        connect.save_data(data, 'dados')
+        connect.save_data(data)
 
 class GetCorredor() :
     def __init__(self, api_token, base_url, args):
@@ -130,7 +130,7 @@ class GetCorredor() :
         connect = ApiConection(self.api_token, self.base_url, self.get)
         session = connect.auth()
         data = connect.get_data(session)
-        connect.save_data(data, 'dados')
+        connect.save_data(data)
 
 class GetEmpresas() :
     def __init__(self, api_token, base_url, args):
@@ -142,7 +142,7 @@ class GetEmpresas() :
         connect = ApiConection(self.api_token, self.base_url, self.get)
         session = connect.auth()
         data = connect.get_data(session)
-        connect.save_data(data, 'dados')
+        connect.save_data(data)
 
 class GetPrevisao() :
     def __init__(self, api_token, base_url, args):
@@ -154,7 +154,7 @@ class GetPrevisao() :
         connect = ApiConection(self.api_token, self.base_url, self.get)
         session = connect.auth()
         data = connect.get_data(session)
-        connect.save_data(data, 'dados')
+        connect.save_data(data)
 
 class GetPrevisaoLinha() :
     def __init__(self, api_token, base_url, args):
@@ -166,7 +166,7 @@ class GetPrevisaoLinha() :
         connect = ApiConection(self.api_token, self.base_url, self.get)
         session = connect.auth()
         data = connect.get_data(session)
-        connect.save_data(data, 'dados')
+        connect.save_data(data)
 
 class GetPrevisaoParada() :
     def __init__(self, api_token, base_url, args):
@@ -178,4 +178,4 @@ class GetPrevisaoParada() :
         connect = ApiConection(self.api_token, self.base_url, self.get)
         session = connect.auth()
         data = connect.get_data(session)
-        connect.save_data(data, 'dados')
+        connect.save_data(data)
