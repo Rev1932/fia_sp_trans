@@ -39,42 +39,62 @@ class ApiConection():
             print(f"Erro de conexão durante a autenticação: {e}")
             return None
         
-    def get_data(self, session: requests.Session) -> list:
+    def get_data(self, session: requests.Session, params=None) -> list:
         if not session:
             print("Sessão de autenticação inválida")
             return None
-        
         posicao_url = f'{self.api_base_url}/{self.api_get_url}'
         print(posicao_url)
-        try:
-            response = session.get(posicao_url)
-            response.raise_for_status()
-            dados = response.json()
-            return dados
-        except requests.exceptions.RequestException as e:
-            print(f"Erro ao buscar posição dos veículos: {e}")
-        except json.JSONDecodeError:
-            print("Erro ao decodificar a resposta JSON da API.")
-            
-        return None
+        if not params:
+            try:
+                response = session.get(posicao_url)
+                response.raise_for_status()
+                dados = response.json()
+                return dados
+            except requests.exceptions.RequestException as e:
+                print(f"Erro ao buscar posição dos veículos: {e}")
+            except json.JSONDecodeError:
+                print("Erro ao decodificar a resposta JSON da API.")
+                return None
+        else:
+            try:
+                response = session.get(posicao_url, params=params)
+                response.raise_for_status()
+                dados = response.json()
+                return dados
+            except requests.exceptions.RequestException as e:
+                print(f"Erro ao buscar posição dos veículos: {e}")
+            except json.JSONDecodeError:
+                print("Erro ao decodificar a resposta JSON da API.")
+                
+            return None
 
-    def transform_data(self, dados, chave_conteudo):
+    def transform_data(self, dados, chave_conteudo=None):
         """
         Função genérica para converter o JSON da API em um DataFrame Pandas,
         usando pd.json_normalize para achatamento.
         """
-        hora_api = None
-        hora_proc = datetime.now().isoformat()
-        df = pd.DataFrame() # DataFrame vazio por padrão
-
-        if isinstance(dados, dict):
-            hora_api = dados.get('hr')
-        df = pd.json_normalize(dados[f'{chave_conteudo}'])
-        print("Mostrando Data Frame \n")
-        print(df)
-        df['data_coleta'] = hora_proc
-        transformed_data = df.to_dict('records')
-        return transformed_data
+        if not dados:
+            print("Get sem dados retornados")
+            return None
+        else:
+            hora_api = None
+            hora_proc = datetime.now().isoformat()
+            df = pd.DataFrame() # DataFrame vazio por padrão
+            if not chave_conteudo:
+                df = pd.json_normalize(dados)
+                print("Mostrando Data Frame \n")
+                print(df)
+                df['data_coleta'] = hora_proc
+                transformed_data = df.to_dict('records')
+                return transformed_data
+            else:
+                df = pd.json_normalize(dados[f'{chave_conteudo}'])
+                print("Mostrando Data Frame \n")
+                print(df)
+                df['data_coleta'] = hora_proc
+                transformed_data = df.to_dict('records')
+                return transformed_data
 
 
     def save_data(self, dados:dict, topic_name): 

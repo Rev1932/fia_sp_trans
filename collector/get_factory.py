@@ -45,20 +45,24 @@ class GetPosicaoLinha() :
         self.api_token = api_token
         self.base_url = base_url
         self.topic_name = args.get
-        self.conteudo_json = 'vs'
-        self.get = f"posicao/linha?codigoLinha={args.linha}"
+        self.chave_conteudo = 'vs'
+        self.params = {
+            'codigoLinha': args.linha
+        }
+        self.get = "posicao/linha"
 
     def run(self):
         connect = ApiConection(self.api_token, self.base_url, self.get)
         session = connect.auth()
-        data = connect.get_data(session)
-        connect.save_data(data, self.topic_name)
+        data = connect.get_data(session, self.params)
+        transformed_data = connect.transform_data(data, self.chave_conteudo)
+        connect.save_data(transformed_data, self.topic_name)
 
 class GetPosicaoGaragem() :
     def __init__(self, api_token, base_url, args):
         self.api_token = api_token
         self.base_url = base_url
-        self.get = f"{args.get}/garagem?codigoEmpresa={args.empresa}"
+        self.get = "garagem"
 
     def run(self):
         connect = ApiConection(self.api_token, self.base_url, self.get)
@@ -94,13 +98,18 @@ class GetParadasBuscar() :
     def __init__(self, api_token, base_url, args):
         self.api_token = api_token
         self.base_url = base_url
-        self.get = f"{args.get}/buscar?termosBusca={args.parada}" 
+        self.topic_name = args.get
+        self.params = {
+            'termosBusca': 'Afonso'
+        }
+        self.get = "parada/buscar"
 
     def run(self):
         connect = ApiConection(self.api_token, self.base_url, self.get)
         session = connect.auth()
-        data = connect.get_data(session)
-        connect.save_data(data)
+        data = connect.get_data(session, self.params)
+        transformed_data = connect.transform_data(data)
+        connect.save_data(transformed_data, self.topic_name)
 
 class GetParadasBuscarLinha() :
     def __init__(self, api_token, base_url, args):
@@ -130,13 +139,16 @@ class GetCorredor() :
     def __init__(self, api_token, base_url, args):
         self.api_token = api_token
         self.base_url = base_url
-        self.get = f"{args.get}" 
+        self.topic_name = args.get
+        self.get = args.get
 
     def run(self):
         connect = ApiConection(self.api_token, self.base_url, self.get)
         session = connect.auth()
         data = connect.get_data(session)
-        connect.save_data(data)
+        print(data)
+        transformed_data = connect.transform_data(data)
+        connect.save_data(transformed_data, self.topic_name)
 
 class GetEmpresas() :
     def __init__(self, api_token, base_url, args):
