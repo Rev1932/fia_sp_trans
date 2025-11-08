@@ -178,13 +178,19 @@ class GetPrevisaoLinha() :
     def __init__(self, api_token, base_url, args):
         self.api_token = api_token
         self.base_url = base_url
-        self.get = f"{args.get}/Linha?codigoLinha={args.linha}" 
+        self.topic_name = args.get
+        self.chave_conteudo = 'ps'
+        self.params = {
+            'codigoLinha': args.linha
+        }
+        self.get = "previsao/linha"
 
     def run(self):
         connect = ApiConection(self.api_token, self.base_url, self.get)
         session = connect.auth()
-        data = connect.get_data(session)
-        connect.save_data(data)
+        data = connect.get_data(session, self.params)
+        transformed_data = connect.transform_data(data, self.chave_conteudo)
+        connect.save_data(transformed_data, self.topic_name)
 
 class GetPrevisaoParada() :
     def __init__(self, api_token, base_url, args):
