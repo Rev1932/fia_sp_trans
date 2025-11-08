@@ -47,7 +47,7 @@ class GetPosicaoLinha() :
         self.topic_name = args.get
         self.chave_conteudo = 'vs'
         self.params = {
-            'codigoLinha': args.linha
+            'codigoLinha': args.id_linha
         }
         self.get = "posicao/linha"
 
@@ -74,13 +74,18 @@ class GetLinhaBuscar() :
     def __init__(self, api_token, base_url, args):
         self.api_token = api_token
         self.base_url = base_url
-        self.get = f"{args.get}/buscar?termosBusca={args.linha}" 
+        self.topic_name = args.get
+        self.params = {
+            'termosBusca': args.linha
+        }
+        self.get = "linha/buscar"
 
     def run(self):
         connect = ApiConection(self.api_token, self.base_url, self.get)
         session = connect.auth()
-        data = connect.get_data(session)
-        connect.save_data(data)
+        data = connect.get_data(session, self.params)
+        transformed_data = connect.transform_data(data)
+        connect.save_data(transformed_data, self.topic_name)
 
 class GetLinhaBuscarSentido() :
     def __init__(self, api_token, base_url, args):
@@ -181,7 +186,7 @@ class GetPrevisaoLinha() :
         self.topic_name = args.get
         self.chave_conteudo = 'ps'
         self.params = {
-            'codigoLinha': args.linha
+            'codigoLinha': args.id_linha
         }
         self.get = "previsao/linha"
 
