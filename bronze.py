@@ -16,6 +16,7 @@ topics_to_s3_paths = {
     "sptrans.linhas": "s3a://bronze/linhas",
     "sptrans.posicao": "s3a://bronze/posicao",
     "sptrans.previsao": "s3a://bronze/previsao"
+
 }
 
 def read_from_kafka(spark, topic_name):
