@@ -1,3 +1,4 @@
+
 import os
 os.environ["PYSPARK_SUBMIT_ARGS"] = (
     "--packages "
@@ -12,9 +13,10 @@ from s3_utils import get_spark_session
 
 # Mapeia cada tópico para seu caminho S3
 topics_to_s3_paths = {
-    "veiculos": "s3a://bronze/veiculos",
-    "linhas": "s3a://bronze/linhas",
-    "motoristas": "s3a://bronze/motoristas"
+    "sptrans.linhas": "s3a://bronze/linhas",
+    "sptrans.posicao": "s3a://bronze/posicao",
+    "sptrans.previsao": "s3a://bronze/previsao"
+
 }
 
 def read_from_kafka(spark, topic_name):
