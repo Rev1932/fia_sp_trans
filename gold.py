@@ -94,7 +94,17 @@ w5 = (
 vel_5min = (
     df_speed
     .withColumn("vel_kmh_5min", avg("vel_kmh").over(w5))
-    .select("ts", "veiculo_id", "cl", "codigo_linha", "sl", "vel_kmh", "vel_kmh_5min")
+    .withColumn("velocidade_media", sround(col("vel_kmh_5min"), 2))
+    .select(
+        "ts",
+        "veiculo_id",
+        "cl",
+        "codigo_linha",
+        "sl",
+        "vel_kmh",
+        "vel_kmh_5min",
+        "velocidade_media"
+    )
 )
 vel_5min.write.mode("overwrite").format("parquet").save(GOLD_BASE + "gold_vel_media_5min_por_veiculo")
 print("Gold 2a - Velocidade média por veículo salva")
@@ -114,6 +124,7 @@ vel_5min_line = (
         avg("vel_kmh").alias("vel_kmh_media_inst"),
         avg("vel_kmh_5min_linha").alias("vel_kmh_media_5min")
     )
+    .withColumn("velocidade_media", sround(col("vel_kmh_media_5min"), 2))
 )
 vel_5min_line.write.mode("overwrite").format("parquet").save(GOLD_BASE + "gold_vel_media_5min_por_linha")
 print("Gold 2b - Velocidade média por linha salva")

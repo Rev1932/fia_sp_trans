@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  duckdb:
+    image: duckdb/duckdb:latest
+    container_name: duckdb
+    working_dir: /data
+    volumes:
+      - ./data:/data
+    stdin_open: true
+    tty: true
